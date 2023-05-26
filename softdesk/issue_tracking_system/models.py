@@ -34,3 +34,17 @@ class Issue(models.Model):
 
     def __str__(self):
         return self.title
+
+
+#
+# Initialization : Comment model
+# 
+class Comment(models.Model):
+    description = models.CharField(max_length=255)
+    created_time = models.DateTimeField(auto_now = True)
+
+    class Meta:
+        verbose_name_plural = "Comments"
+
+    def __str__(self):
+        return self.description
