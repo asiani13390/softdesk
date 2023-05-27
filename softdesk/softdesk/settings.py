@@ -128,13 +128,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 #
 # JWT Authentification
-# https://code.tutsplus.com/tutorials/how-to-authenticate-with-jwt-in-django--cms-30460
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/getting_started.html#project-configuration
 #
 REST_FRAMEWORK = {
 
   'DEFAULT_AUTHENTICATION_CLASSES': (
 
-    'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+   'rest_framework_simplejwt.authentication.JWTAuthentication',
 
   ),
 
