@@ -64,7 +64,7 @@ class Issue(models.Model):
 
 
 #
-# Initialization : Comment model
+# "Comment" model
 # 
 class Comment(models.Model):
     description = models.CharField(max_length=255)
@@ -72,7 +72,7 @@ class Comment(models.Model):
 
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
-    
+
     class Meta:
         verbose_name_plural = "Comments"
 
