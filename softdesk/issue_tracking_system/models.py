@@ -2,9 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User 
 
 
-# Create your models here.
-
-
 # 
 # Initialization : Project model
 #
@@ -13,7 +10,8 @@ class Project(models.Model):
     description = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
 
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="project_author")
+    contributors = models.ManyToManyField(User, through="Contributor")
 
     class Meta:
         verbose_name_plural = "Projects"
@@ -43,8 +41,7 @@ class Contributor(models.Model):
 
     class Meta:
         verbose_name_plural = "Contributors"
-
-
+ 
 #
 # Initialization : Issue model
 # 
@@ -55,7 +52,9 @@ class Issue(models.Model):
     priority = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
     created_time = models.DateTimeField(auto_now_add=True) 
-
+    
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    
     class Meta:
         verbose_name_plural = "Issues"
 
