@@ -124,3 +124,18 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+#
+# JWT Authentification
+# https://code.tutsplus.com/tutorials/how-to-authenticate-with-jwt-in-django--cms-30460
+#
+REST_FRAMEWORK = {
+
+  'DEFAULT_AUTHENTICATION_CLASSES': (
+
+    'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+
+  ),
+
+}
