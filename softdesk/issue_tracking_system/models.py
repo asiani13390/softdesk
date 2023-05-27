@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User 
+
 
 # Create your models here.
 
@@ -16,6 +18,28 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+
+#
+# Initialization : Contributor model
+# 
+class Contributor(models.Model):
+
+    PERMISSIONS = (
+        ('admin', 'Administrator'),
+        ('member', 'Member'),
+        ('guest', 'Guest'),
+    )
+
+    permissions = models.CharField(max_length=255, choices=PERMISSIONS)
+    role = models.CharField(max_length=255, null=True, blank=True, default='')
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Contributors"
 
 
 #
