@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 # 
-# Initialization : Project model
+# "Project" model
 #
 class Project(models.Model):
     title = models.CharField(max_length=255)
@@ -20,10 +20,8 @@ class Project(models.Model):
         return self.title
 
 
-
-
 #
-# Initialization : Contributor model
+# "Contributor" model
 # 
 class Contributor(models.Model):
 
@@ -42,8 +40,9 @@ class Contributor(models.Model):
     class Meta:
         verbose_name_plural = "Contributors"
  
+
 #
-# Initialization : Issue model
+# "Issue" model
 # 
 class Issue(models.Model):
     title = models.CharField(max_length=255)
@@ -70,6 +69,8 @@ class Issue(models.Model):
 class Comment(models.Model):
     description = models.CharField(max_length=255)
     created_time = models.DateTimeField(auto_now = True)
+
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Comments"
