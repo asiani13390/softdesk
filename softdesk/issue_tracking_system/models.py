@@ -54,7 +54,8 @@ class Issue(models.Model):
     created_time = models.DateTimeField(auto_now_add=True) 
     
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
     class Meta:
         verbose_name_plural = "Issues"
 
