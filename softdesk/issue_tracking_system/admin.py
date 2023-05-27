@@ -2,9 +2,10 @@ from django.contrib import admin
 
 from .models import Project
 from .models import Contributor
-
+from .models import Issue
 
 # Register your models here.
 
 admin.site.register(Project)
 admin.site.register(Contributor)
+admin.site.register(Issue)
