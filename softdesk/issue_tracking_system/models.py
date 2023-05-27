@@ -55,6 +55,7 @@ class Issue(models.Model):
     
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    assignee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='issue_assignee')
 
     class Meta:
         verbose_name_plural = "Issues"
