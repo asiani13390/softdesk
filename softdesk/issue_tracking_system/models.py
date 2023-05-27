@@ -13,6 +13,8 @@ class Project(models.Model):
     description = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
 
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
     class Meta:
         verbose_name_plural = "Projects"
 
