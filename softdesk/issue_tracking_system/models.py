@@ -71,7 +71,8 @@ class Comment(models.Model):
     created_time = models.DateTimeField(auto_now = True)
 
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
+    
     class Meta:
         verbose_name_plural = "Comments"
 
