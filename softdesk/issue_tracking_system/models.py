@@ -39,6 +39,7 @@ class Contributor(models.Model):
     role = models.CharField(max_length=255, null=True, blank=True, default='')
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey('Project', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Contributors"
