@@ -56,6 +56,27 @@ Use Endpoints !
 
 
 
+| # | API Endpoint | HTTP Method | URI  |
+|--:|---------|:--:|:----|
+|1|  User registration  | POST  | /signup/ |
+|2|  User's login       | POST  | /login/ |
+|3|  Retrieve the list of all the projects attached to the connected user | GET  | /projects/ |
+|4|  Create a project | POST   | /projects/ |
+|5|  Retrieve project details from its id | GET    | /projects/{id}/ |
+|6|  Update a project | PUT    | /projects/{id}/ |
+|7|  Delete a project and its problems | DELETE | /projects/{id}/ |
+|8|  Add a collaborator to a project | POST   | /projects/{id}/users/ |
+|9|  Retrieve the list of all users attached to a project | GET    | /projects/{id}/users/ |
+|10| Remove a user from a project | DELETE  | /projects/{id}/users/{id} |
+|11| Retrieve the list of problems related to a project | GET    | /projects/{id}/issues/ |
+|12| Creating a problem in a project | POST   | /projects/{id}/issues/  |
+|13| Update a problem in a project | PUT    | /projects/{id}/issues/{id}  |
+|14| Delete a problem from a project | DELETE | /projects/{id}/issues/{id} |
+|15| Create comments on a problem | POST   | /projects/{id}/issues/{id}/comments/ |
+|16| Retrieve the list of all comments related to a problem| GET    | /projects/{id}/issues/{id}/comments/ |
+|17| Edit a comment | PUT    | /projects/{id}/issues/{id}/comments/{id} |
+|18| Delete a comment | DELETE | /projects/{id}/issues/{id}/comments/{id} |
+|19| Get a comment via its id | GET    | /projects/{id}/issues/{id}/comments/{id} |
 
 
 
