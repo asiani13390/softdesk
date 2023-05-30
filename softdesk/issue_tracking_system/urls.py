@@ -1,10 +1,19 @@
 from django.contrib import admin
-from django.urls import path
-
+from django.urls import path, include
+from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .views import SignupAPIView
-from .views import ProjectListCreateAPIView
+from .views import ProjectsViewset
+from .views import ProjectsUsersViewset
+
+#from .views import ProjectRetrieveUpdateDestroyView
+#from .views import ProjectListCreateAPIView
+
+
+router = routers.DefaultRouter()
+router.register('projects', ProjectsViewset, basename='projects')
+router.register('projects/(?P<project_id>[0-9]+)/users', ProjectsUsersViewset, basename='projects-users')
 
 urlpatterns = [
 
@@ -12,7 +21,8 @@ urlpatterns = [
     path('signup/', SignupAPIView.as_view(), name='signup'),
     path('login/', TokenObtainPairView.as_view(), name='login'),
 
+    # Import router urls
+    path("", include(router.urls)),
 
-    # Project
-    path('projects/', ProjectListCreateAPIView.as_view(), name='projects'),
+
 ]

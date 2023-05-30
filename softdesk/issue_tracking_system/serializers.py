@@ -3,6 +3,7 @@ from rest_framework.serializers import ModelSerializer
 from django.contrib.auth.models import User 
 
 from .models import Project
+from .models import Contributor
 
 class SignupSerializer(ModelSerializer):
 
@@ -21,5 +22,11 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('title', 'description', 'type', 'author', 'contributors')
+        fields = '__all__'
+
+
+class ContributorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contributor
+        fields = '__all__'
 
