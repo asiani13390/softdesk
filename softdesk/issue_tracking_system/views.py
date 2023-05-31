@@ -11,19 +11,21 @@ from django.shortcuts import get_object_or_404
 from .models import Project
 from .models import Contributor
 from .models import Issue
+from .models import Comment
 
 
 from .serializers import SignupSerializer
 from .serializers import ProjectSerializer
 from .serializers import ContributorSerializer
 from .serializers import IssueSerializer
+from .serializers import CommentSerializer
 
 from .permissions import CanEditOrDestroyProject
 from .permissions import CanAddContributorInProject
 from .permissions import CanListContributorOfProject
 from .permissions import CanDestroyContributorOfProject
-
 from .permissions import IssueViewsetPermission
+from .permissions import CommentViewsetPermission
 
 
 #
@@ -201,3 +203,72 @@ class IssueViewset(ModelViewSet):
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+# Endpoint :
+#           /projects/{id}/issues/{id}/comments/
+#           /projects/{id}/issues/{id}/comments/{id}
+#
+# 15. POST - Create comments on a problem
+# 16. GET - Retrieve the list of all comments related to a problem
+# 17. PUT -  Edit a comment
+# 18. DELETE - Delete a comment
+# 19. GET - Get a comment via its id
+
+
+class CommentViewset(ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated, CommentViewsetPermission]
+
+
+    def get_queryset(self):
+        print("> CommentViewset: get()")
+
+        project_id = self.kwargs['project_id']
+        issue_id = self.kwargs['issue_id']
+        comment_id = self.kwargs.get('pk')
+
+        message =  "Project_id : ",str(project_id), " "
+        message += "Issue_id : ",str(issue_id), " "
+        message += "comment_id : ",str(comment_id), " "
+
+        print(message)
+
+        if (comment_id != "None"):
+            queryset = Comment.objects.filter(issue__project_id=project_id, issue_id=issue_id)    
+        else:
+            queryset = Comment.objects.filter(issue__project_id=project_id, issue_id=issue_id)
+
+        return queryset
+
+
+    def create(self, request, *args, **kwargs):
+        project_id = self.kwargs['project_id']
+        issue_id = self.kwargs['issue_id']
+
+        print("Project_id:", project_id, ", Issue_id:", issue_id)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        issue = Issue.objects.get(id=issue_id, project_id=project_id)
+        serializer.validated_data['issue'] = issue
+
+        self.perform_create(serializer)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)

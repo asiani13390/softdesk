@@ -7,6 +7,7 @@ from .views import SignupAPIView
 from .views import ProjectsViewset
 from .views import ProjectsUsersViewset
 from .views import IssueViewset
+from .views import CommentViewset
 
 
 #from .views import ProjectRetrieveUpdateDestroyView
@@ -17,6 +18,7 @@ router = routers.DefaultRouter()
 router.register(r'projects', ProjectsViewset, basename='projects')
 router.register(r'projects/(?P<project_id>[0-9]+)/users', ProjectsUsersViewset, basename='projects-users')
 router.register(r'projects/(?P<project_id>[0-9]+)/issues', IssueViewset)
+router.register(r'projects/(?P<project_id>[0-9]+)/issues/(?P<issue_id>[0-9]+)/comments', CommentViewset)
 
 urlpatterns = [
 

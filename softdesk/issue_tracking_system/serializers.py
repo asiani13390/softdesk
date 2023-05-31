@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from .models import Project
 from .models import Contributor
 from .models import Issue
+from .models import Comment
 
 class SignupSerializer(ModelSerializer):
 
@@ -41,3 +42,14 @@ class IssueSerializer(ModelSerializer):
     class Meta:
         model = Issue
         fields = '__all__'
+
+
+class CommentSerializer(ModelSerializer):
+    issue = serializers.PrimaryKeyRelatedField(queryset=Issue.objects.all(), required=False)
+
+    class Meta:
+        model = Comment
+        fields = '__all__'
+
+
+

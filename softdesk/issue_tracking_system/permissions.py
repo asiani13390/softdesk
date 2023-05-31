@@ -68,6 +68,13 @@ class CanDestroyContributorOfProject(BasePermission):
 # ISSUES 11.12.13.14
 class IssueViewsetPermission(BasePermission):
 
+    def has_permission(self, request, view):
+        return True
+
+
+# COMMENTS 15.16.17.18.19
+class CommentViewsetPermission(BasePermission):
+
     # 
     def has_permission(self, request, view):
         return True
