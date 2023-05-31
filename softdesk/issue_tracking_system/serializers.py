@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 from .models import Project
 from .models import Contributor
+from .models import Issue
 
 class SignupSerializer(ModelSerializer):
 
@@ -30,3 +31,13 @@ class ContributorSerializer(serializers.ModelSerializer):
         model = Contributor
         fields = '__all__'
 
+
+class IssueSerializer(ModelSerializer):
+
+    # project and assignee are not required - if yes, we cannot create new issue
+    project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all(), required=False)
+    assignee = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
+
+    class Meta:
+        model = Issue
+        fields = '__all__'

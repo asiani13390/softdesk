@@ -2,8 +2,6 @@ from rest_framework.permissions import BasePermission
 from .models import Project
 from .models import Contributor
 
-
-
 class CanEditOrDestroyProject(BasePermission):
     
     def has_object_permission(self, request, view, obj):
@@ -42,9 +40,7 @@ class CanAddContributorInProject(BasePermission):
 
         return True
 
-
-       
-
+      
 class CanListContributorOfProject(BasePermission):
     
     def has_permission(self, request, view):
@@ -67,3 +63,11 @@ class CanDestroyContributorOfProject(BasePermission):
     
     def has_permission(self, request, view):
             return True
+    
+
+# ISSUES 11.12.13.14
+class IssueViewsetPermission(BasePermission):
+
+    # 
+    def has_permission(self, request, view):
+        return True

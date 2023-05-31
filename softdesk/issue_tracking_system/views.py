@@ -5,18 +5,25 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user
+from django.shortcuts import get_object_or_404
 
 from .models import Project
 from .models import Contributor
+from .models import Issue
+
 
 from .serializers import SignupSerializer
 from .serializers import ProjectSerializer
 from .serializers import ContributorSerializer
+from .serializers import IssueSerializer
 
 from .permissions import CanEditOrDestroyProject
 from .permissions import CanAddContributorInProject
 from .permissions import CanListContributorOfProject
 from .permissions import CanDestroyContributorOfProject
+
+from .permissions import IssueViewsetPermission
 
 
 #
@@ -123,6 +130,7 @@ class ProjectsUsersViewset(ModelViewSet):
         message = { "message" : "ProjectsUsersViewset - List", "data" : serializer.data}
         return Response(message, status=status.HTTP_200_OK)
 
+
     def destroy(self, request, *args, **kwargs):
         print("> ProjectsUsersViewset : destroy()")
 
@@ -136,3 +144,60 @@ class ProjectsUsersViewset(ModelViewSet):
         contributor.delete()
 
         return Response("", status=status.HTTP_204_NO_CONTENT)
+
+
+# Endpoint :
+#           /projects/{id}/issues/
+#           /projects/{id}/issues/{id}
+#
+# 11. GET - Retrieve the list of problems related to a project
+# 12. POST - Creating a problem in a project
+# 13. PUT - Update a problem in a project
+# 14. DELETE - Delete a problem from a project
+
+class IssueViewset(ModelViewSet):
+
+    queryset = Issue.objects.all()
+    serializer_class = IssueSerializer
+    permission_classes = [IsAuthenticated, IssueViewsetPermission]
+
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_id')
+        queryset = Issue.objects.filter(project_id=project_id)
+        return queryset
+
+    def create(self, request, *args, **kwargs):      
+        print("> IssueViewset: create()")
+
+        project_id = self.kwargs.get('project_id')
+        project = Project.objects.get(id=project_id)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        serializer.validated_data['project'] = project
+        serializer.validated_data['assignee'] = request.user
+
+        self.perform_create(serializer)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+    def update(self, request, *args, **kwargs):
+        print("> IssueViewset: update()")
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
+
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

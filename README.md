@@ -222,7 +222,7 @@ You must be authenticated to use endpoints.
     |Authenticated only : You do not have permission to perform this action.|
     |Is author or contributor : JSON table of project's contributors|
 
-10. Remove a user from a project | DELETE  | /projects/{id}/users/{id}
+10. Remove a user from a project
 
     * Open Postman
     * Use method "DELETE"
@@ -243,3 +243,23 @@ You must be authenticated to use endpoints.
     |Is author : JSON table of project's contributors|
 
 
+11. Retrieve the list of problems related to a project
+
+    * Open Postman
+    * Use method "GET"
+    * URI : /projects/{id}/issues/
+    * Headers : Authorization = Bearer [access token]
+    * Body : None
+    * Click "Send" button
+
+    |PERMISSIONS|
+    |-----------|
+    |Authenticated user|
+    |Only contributors are able to create and read project's issues|
+    
+
+    |RESULT|
+    |------|
+    |Not authenticated : Given token not valid for any token type|
+    |Authenticated only : You do not have permission to perform this action.|
+    |Is contributor : JSON table of project's issues|

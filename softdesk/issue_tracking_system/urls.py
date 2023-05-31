@@ -6,6 +6,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .views import SignupAPIView
 from .views import ProjectsViewset
 from .views import ProjectsUsersViewset
+from .views import IssueViewset
+
 
 #from .views import ProjectRetrieveUpdateDestroyView
 #from .views import ProjectListCreateAPIView
@@ -14,6 +16,7 @@ from .views import ProjectsUsersViewset
 router = routers.DefaultRouter()
 router.register(r'projects', ProjectsViewset, basename='projects')
 router.register(r'projects/(?P<project_id>[0-9]+)/users', ProjectsUsersViewset, basename='projects-users')
+router.register(r'projects/(?P<project_id>[0-9]+)/issues', IssueViewset)
 
 urlpatterns = [
 
