@@ -12,16 +12,11 @@ from .models import Contributor
 from .serializers import SignupSerializer
 from .serializers import ProjectSerializer
 from .serializers import ContributorSerializer
+
 from .permissions import CanEditOrDestroyProject
 from .permissions import CanAddContributorInProject
 from .permissions import CanListContributorOfProject
 from .permissions import CanDestroyContributorOfProject
-
-
-from rest_framework import status
-from rest_framework.response import Response
-
-
 
 
 #
@@ -101,12 +96,8 @@ class ProjectsUsersViewset(ModelViewSet):
 
     queryset = Contributor.objects.all()
     serializer_class = ContributorSerializer
-    #permission_classes = [IsAuthenticated, CanAddContributorInProject, CanListContributorOfProject, CanDestroyContributorOfProject]
+    permission_classes = [IsAuthenticated, CanAddContributorInProject, CanListContributorOfProject, CanDestroyContributorOfProject]
 
-    def destroy(self, request, *args, **kwargs):
-        print("==== Destroy method called ====")
-        message = { "message" : "ProjectsUsersViewset - destroy", "data" : ""}
-        return Response(message, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         project_id = self.kwargs.get('project_id')
@@ -131,3 +122,17 @@ class ProjectsUsersViewset(ModelViewSet):
 
         message = { "message" : "ProjectsUsersViewset - List", "data" : serializer.data}
         return Response(message, status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        print("> ProjectsUsersViewset : destroy()")
+
+        user_id = self.kwargs.get('pk')
+        project_id = self.kwargs.get('project_id') 
+
+        project = Project.objects.get(id=project_id)
+        user = User.objects.get(id=user_id)
+
+        contributor = Contributor.objects.filter(project=project, user=user)
+        contributor.delete()
+
+        return Response("", status=status.HTTP_204_NO_CONTENT)

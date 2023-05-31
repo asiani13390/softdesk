@@ -12,8 +12,8 @@ from .views import ProjectsUsersViewset
 
 
 router = routers.DefaultRouter()
-router.register('projects', ProjectsViewset, basename='projects')
-router.register('projects/(?P<project_id>[0-9]+)/users', ProjectsUsersViewset, basename='projects-users')
+router.register(r'projects', ProjectsViewset, basename='projects')
+router.register(r'projects/(?P<project_id>[0-9]+)/users', ProjectsUsersViewset, basename='projects-users')
 
 urlpatterns = [
 
