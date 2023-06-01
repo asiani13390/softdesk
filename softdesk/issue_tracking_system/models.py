@@ -54,10 +54,16 @@ class Contributor(models.Model):
 # "Issue" model
 # 
 class Issue(models.Model):
+    PRIORITY = (
+                    ('LOW', 'Low'),
+                    ('MEDIUM', 'Medium'),
+                    ('HIGH', 'High')
+    )
+
     title = models.CharField(max_length=255)
     desc = models.CharField(max_length=255)
     tag = models.CharField(max_length=255)
-    priority = models.CharField(max_length=255)
+    priority = models.CharField(max_length=255, choices=PRIORITY)
     status = models.CharField(max_length=255)
     created_time = models.DateTimeField(auto_now_add=True) 
     
