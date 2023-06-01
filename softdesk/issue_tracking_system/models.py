@@ -12,7 +12,7 @@ class Project(models.Model):
         ('backend', 'Back-end'),
         ('frontend', 'Front-end'),
         ('ios', 'IOS'),
-        ('Android', 'Android'),
+        ('android', 'Android'),
     )
 
     title = models.CharField(max_length=255)

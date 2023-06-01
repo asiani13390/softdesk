@@ -5,14 +5,12 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import User
-from django.contrib.auth import get_user
-from django.shortcuts import get_object_or_404
+from rest_framework.exceptions import PermissionDenied
 
 from .models import Project
 from .models import Contributor
 from .models import Issue
 from .models import Comment
-
 
 from .serializers import SignupSerializer
 from .serializers import ProjectSerializer
@@ -20,12 +18,7 @@ from .serializers import ContributorSerializer
 from .serializers import IssueSerializer
 from .serializers import CommentSerializer
 
-from .permissions import CanEditOrDestroyProject
-from .permissions import CanAddContributorInProject
-from .permissions import CanListContributorOfProject
-from .permissions import CanDestroyContributorOfProject
-from .permissions import IssueViewsetPermission
-from .permissions import CommentViewsetPermission
+from .permissions import AuthorAndContributorOnly
 
 
 #
@@ -60,26 +53,51 @@ class SignupAPIView(APIView):
 class ProjectsViewset(ModelViewSet):
 
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated, CanEditOrDestroyProject]
+    permission_classes = [IsAuthenticated, AuthorAndContributorOnly]
     
+    # 3. GET - Retrieve the list of all the projects attached to the connected user
     def get_queryset(self):
+        print("> ProjectsViewset: get()")
+
         user = self.request.user
-        queryset = Project.objects.filter(contributors=user) | Project.objects.filter(author=user)
+        # queryset = Project.objects.filter(contributors=user) | Project.objects.filter(author=user)
+        queryset = Project.objects.all()
+
         return queryset
 
+    # 4. POST - Create a project
     def create(self, request, *args, **kwargs):
+        print("> ProjectsViewset: create()")
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+    # 5. GET - Retrieve project details from its id
     def retrieve(self, request, *args, **kwargs):
+        print("> ProjectsViewset: retrieve()")
+
+        project_id = self.kwargs.get('pk')
+        print("> ProjectsViewset: retrieve(", project_id, ")")
+
         instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+
+        if self.check_object_permissions(request, instance):
+            print("!!!! Not Authorized !!!!")
+            return Response({"detail": "Permission denied"}, status=status.HTTP_403_FORBIDDEN)
+        else:
+            serializer = self.get_serializer(instance)
+            print(serializer.data)
+
+            return Response(serializer.data)
+
+
 
     def update(self, request, *args, **kwargs):
+        print("> ProjectsViewset: update()")
+
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -88,6 +106,8 @@ class ProjectsViewset(ModelViewSet):
         return Response(serializer.data)
     
     def destroy(self, request, *args, **kwargs):
+        print("> ProjectsViewset: destroy()")
+
         instance = self.get_object()
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -105,10 +125,11 @@ class ProjectsUsersViewset(ModelViewSet):
 
     queryset = Contributor.objects.all()
     serializer_class = ContributorSerializer
-    permission_classes = [IsAuthenticated, CanAddContributorInProject, CanListContributorOfProject, CanDestroyContributorOfProject]
-
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
+        print("> ProjectsUsersViewset: create()")
+
         project_id = self.kwargs.get('project_id')
 
         user_id = request.data.get('user_id')
@@ -125,6 +146,8 @@ class ProjectsUsersViewset(ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def list(self, request, *args, **kwargs):
+        print("> ProjectsUsersViewset: list()")
+
         project_id = self.kwargs.get('project_id')
         contributors = Contributor.objects.filter(project_id=project_id)
         serializer = ContributorSerializer(contributors, many=True)
@@ -161,9 +184,10 @@ class IssueViewset(ModelViewSet):
 
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
-    permission_classes = [IsAuthenticated, IssueViewsetPermission]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        print("> IssueViewset: get()")
         project_id = self.kwargs.get('project_id')
         queryset = Issue.objects.filter(project_id=project_id)
         return queryset
@@ -199,6 +223,7 @@ class IssueViewset(ModelViewSet):
 
 
     def destroy(self, request, *args, **kwargs):
+        print("> IssueViewset: destroy()")
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -218,8 +243,7 @@ class IssueViewset(ModelViewSet):
 class CommentViewset(ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated, CommentViewsetPermission]
-
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         print("> CommentViewset: get()")
@@ -243,6 +267,7 @@ class CommentViewset(ModelViewSet):
 
 
     def create(self, request, *args, **kwargs):
+        print("> CommentViewset: create()")
         project_id = self.kwargs['project_id']
         issue_id = self.kwargs['issue_id']
 
@@ -261,6 +286,7 @@ class CommentViewset(ModelViewSet):
 
     
     def update(self, request, *args, **kwargs):
+        print("> CommentViewset: update()")
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -269,6 +295,7 @@ class CommentViewset(ModelViewSet):
 
     
     def destroy(self, request, *args, **kwargs):
+        print("> CommentViewset: destroy()")
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
