@@ -18,7 +18,9 @@ from .serializers import ContributorSerializer
 from .serializers import IssueSerializer
 from .serializers import CommentSerializer
 
-from .permissions import AuthorAndContributorOnly
+from .permissions import AuthorAndContributorOnlyForProjects
+
+from django.core.exceptions import ObjectDoesNotExist
 
 
 #
@@ -53,15 +55,23 @@ class SignupAPIView(APIView):
 class ProjectsViewset(ModelViewSet):
 
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated, AuthorAndContributorOnly]
+    permission_classes = [IsAuthenticated, AuthorAndContributorOnlyForProjects]
     
     # 3. GET - Retrieve the list of all the projects attached to the connected user
     def get_queryset(self):
         print("> ProjectsViewset: get()")
 
         user = self.request.user
-        # queryset = Project.objects.filter(contributors=user) | Project.objects.filter(author=user)
-        queryset = Project.objects.all()
+
+        # If there is a 'pk', you must retrieve all the results so that the permissions can apply and not return "not found"
+        pk = self.kwargs.get('pk')
+        print("pk = ", pk)
+        if (pk == None ):
+            print("Filtrage des resultats")
+            queryset = Project.objects.filter(contributors=user) | Project.objects.filter(author=user)
+        else:
+            queryset = Project.objects.all()
+            print("> Get All objects ") 
 
         return queryset
 
@@ -81,17 +91,22 @@ class ProjectsViewset(ModelViewSet):
 
         project_id = self.kwargs.get('pk')
         print("> ProjectsViewset: retrieve(", project_id, ")")
-
+        
+        '''
+        try:
+            instance = self.get_queryset().get(id=project_id)
+        
+        except ObjectDoesNotExist:
+            # All responses outside of queryset filtering are not allowed: HTTP_401_UNAUTHORIZED
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        '''
+        
         instance = self.get_object()
 
-        if self.check_object_permissions(request, instance):
-            print("!!!! Not Authorized !!!!")
-            return Response({"detail": "Permission denied"}, status=status.HTTP_403_FORBIDDEN)
-        else:
-            serializer = self.get_serializer(instance)
-            print(serializer.data)
+        serializer = self.get_serializer(instance)
+        print(serializer.data)
 
-            return Response(serializer.data)
+        return Response(serializer.data)
 
 
 
