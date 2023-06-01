@@ -61,16 +61,22 @@ class Issue(models.Model):
     )
 
     TAG = (
-                ("BUG", "Bug"),
-                ("IMPROUVMENT", "Improuvment"),
-                ("TASK", "Task")
+                ('BUG', 'Bug'),
+                ('IMPROUVMENT', 'Improuvment'),
+                ('TASK', 'Task')
+    )
+
+    STATUS = (
+                ('TODO', 'Todo'),
+                ('CURRENT', 'Current'),
+                ('END', 'End')
     )
 
     title = models.CharField(max_length=255)
     desc = models.CharField(max_length=255)
     tag = models.CharField(max_length=255, choices=TAG)
     priority = models.CharField(max_length=255, choices=PRIORITY)
-    status = models.CharField(max_length=255)
+    status = models.CharField(max_length=255, choices=STATUS)
     created_time = models.DateTimeField(auto_now_add=True) 
     
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
