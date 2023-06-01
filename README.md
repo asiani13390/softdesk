@@ -36,12 +36,19 @@ Clone the API and launch it !
 
 ``` 
 git clone https://github.com/asiani13390/softdesk.git
+
+
+pip install requirements.txt
+
+source env/bin/activate
+
 cd softdesk/softdesk/
 python manage.py runserver
 ```
-## Documentation
 
-Move to the web documentation published by Postman :
+## Postman documentation
+
+Postman documentation published :
 [POSTMAN DOCUMENTATION](https://documenter.getpostman.com/view/26061685/2s93m8xKje)
 
 
@@ -53,6 +60,7 @@ Use endpoint to register the API
 
 Use enpoint to login the API
 
+Use API endpoints 
 
 | # | API Endpoint | HTTP Method | URI  |
 |--:|---------|:--:|:----|

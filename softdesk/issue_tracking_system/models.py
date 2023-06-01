@@ -5,10 +5,19 @@ from django.contrib.auth.models import User
 # 
 # "Project" model
 #
+# 
 class Project(models.Model):
+
+    TYPE = (
+        ('backend', 'Back-end'),
+        ('frontend', 'Front-end'),
+        ('ios', 'IOS'),
+        ('Android', 'Android'),
+    )
+
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    type = models.CharField(max_length=255)
+    type = models.CharField(max_length=255, choices=TYPE)
 
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="project_author")
     contributors = models.ManyToManyField(User, through="Contributor")
