@@ -5,7 +5,6 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import User
-from rest_framework.exceptions import PermissionDenied
 
 from .models import Project
 from .models import Contributor
@@ -18,7 +17,7 @@ from .serializers import ContributorSerializer
 from .serializers import IssueSerializer
 from .serializers import CommentSerializer
 
-from .permissions import AuthorAndContributorOnlyForProjects
+from .permissions import PermissionProject
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -55,7 +54,7 @@ class SignupAPIView(APIView):
 class ProjectsViewset(ModelViewSet):
 
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated, AuthorAndContributorOnlyForProjects]
+    permission_classes = [IsAuthenticated, PermissionProject]
     
     # 3. GET - Retrieve the list of all the projects attached to the connected user
     def get_queryset(self):
