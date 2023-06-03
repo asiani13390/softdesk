@@ -18,6 +18,11 @@ from .serializers import IssueSerializer
 from .serializers import CommentSerializer
 
 from .permissions import PermissionProject
+from .permissions import PermissionProjectsUsers
+from .permissions import PermissionIssue
+from .permissions import PermissionComment
+
+
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -66,11 +71,11 @@ class ProjectsViewset(ModelViewSet):
         pk = self.kwargs.get('pk')
         print("pk = ", pk)
         if (pk == None ):
-            print("Filtrage des resultats")
+            print("Results are filtered : User must be contributor or project author.")
             queryset = Project.objects.filter(contributors=user) | Project.objects.filter(author=user)
         else:
+            print("Result are not filtered. Action will be on only one selected object.")
             queryset = Project.objects.all()
-            print("> Get All objects ") 
 
         return queryset
 
@@ -137,10 +142,15 @@ class ProjectsViewset(ModelViewSet):
 
 class ProjectsUsersViewset(ModelViewSet):
 
-    queryset = Contributor.objects.all()
     serializer_class = ContributorSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, PermissionProjectsUsers]
 
+    def get_queryset(self):
+        queryset = Contributor.objects.all()
+        return queryset
+
+
+    # 8.  POST - Add a collaborator to a project
     def create(self, request, *args, **kwargs):
         print("> ProjectsUsersViewset: create()")
 
@@ -159,6 +169,7 @@ class ProjectsUsersViewset(ModelViewSet):
         serializer = ContributorSerializer(contributor)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    # 9.  GET - Retrieve the list of all users attached to a project 
     def list(self, request, *args, **kwargs):
         print("> ProjectsUsersViewset: list()")
 
@@ -169,7 +180,7 @@ class ProjectsUsersViewset(ModelViewSet):
         message = { "message" : "ProjectsUsersViewset - List", "data" : serializer.data}
         return Response(message, status=status.HTTP_200_OK)
 
-
+    # 10. DELETE - Remove a user from a project
     def destroy(self, request, *args, **kwargs):
         print("> ProjectsUsersViewset : destroy()")
 
@@ -198,16 +209,19 @@ class IssueViewset(ModelViewSet):
 
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, PermissionIssue]
 
     def get_queryset(self):
         print("> IssueViewset: get()")
         project_id = self.kwargs.get('project_id')
+
         queryset = Issue.objects.filter(project_id=project_id)
         return queryset
 
     def create(self, request, *args, **kwargs):      
         print("> IssueViewset: create()")
+
+        self.check_permissions(request) 
 
         project_id = self.kwargs.get('project_id')
         project = Project.objects.get(id=project_id)
@@ -257,7 +271,7 @@ class IssueViewset(ModelViewSet):
 class CommentViewset(ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, PermissionComment]
 
     def get_queryset(self):
         print("> CommentViewset: get()")
@@ -265,12 +279,6 @@ class CommentViewset(ModelViewSet):
         project_id = self.kwargs['project_id']
         issue_id = self.kwargs['issue_id']
         comment_id = self.kwargs.get('pk')
-
-        message =  "Project_id : ",str(project_id), " "
-        message += "Issue_id : ",str(issue_id), " "
-        message += "comment_id : ",str(comment_id), " "
-
-        print(message)
 
         if (comment_id != "None"):
             queryset = Comment.objects.filter(issue__project_id=project_id, issue_id=issue_id)    
