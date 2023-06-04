@@ -32,7 +32,7 @@ Free software.
 
 ## Prepare to use the API
 
-This programm has been tested with python 3.9.13
+This programm has been tested with **python 3.9.13**
 
 Get source of programm : Clone the API 
 
@@ -71,7 +71,7 @@ cd softdesk/
 python manage.py runserver
 ```
 
-## Postman documentation
+## Softdesk Postman documentation
 
 Link for Postman published documentation  :
 [POSTMAN DOCUMENTATION](https://documenter.getpostman.com/view/26061685/2s93m8xKje)
@@ -112,17 +112,6 @@ cd Postman
 * Click on "Collections"
 
 Now, you can show the collection in local Postman application.
-
-
-
-
-
-
-
-
-
-
-
 
 ## Howto
 
@@ -165,9 +154,11 @@ The base URL will be : "http://localhost:8000/admin/issue_tracking_system"
 
 You must be registered and authenticated to use endpoints.
 ```
+1. User signup
+
+2. user login
 
 3. Retrieve the list of all the projects attached to the user connected 
-
     
     * Open Postman
     * Use method "GET"
