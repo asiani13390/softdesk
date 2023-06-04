@@ -32,35 +32,108 @@ Free software.
 
 ## Prepare to use the API
 
-Clone the API and launch it !
+This programm has been tested with python 3.9.13
+
+Get source of programm : Clone the API 
 
 ``` 
 git clone https://github.com/asiani13390/softdesk.git
+```
 
+Move into the project
 
-pip install requirements.txt
+``` 
+cd softdesk
+``` 
 
-source env/bin/activate
+Create python virtual environement
 
-cd softdesk/softdesk/
+``` 
+python -m venv env
+``` 
+
+Activate the python virtual environment
+
+``` 
+source ./env/bin/activate
+``` 
+
+Import modules
+
+``` 
+pip install -r requirements.txt
+``` 
+
+Run django server
+
+```
+cd softdesk/
 python manage.py runserver
 ```
 
 ## Postman documentation
 
-Postman documentation published :
+Link for Postman published documentation  :
 [POSTMAN DOCUMENTATION](https://documenter.getpostman.com/view/26061685/2s93m8xKje)
+
+## Postman installation
+
+Download Postman from : `https://www.postman.com/`
+
+### Example for Linux (x64)
+
+* Open your navigator : `https://www.postman.com/`
+* Select 'Download the desktop app for Linux'
+* Clic "Linux (x64)"
+* Postman is downloaded
+* Move the application where you want
+* Decompresser l'archive
+```
+tar xvzf postman-linux-x64.tar.gz
+```
+* Move into Postman folder
+```
+cd Postman
+```
+* Run Postman application
+```
+./Postman
+```
+
+## Import Postman published documentation
+
+* Open your browser to the published postman documentation :
+`https://documenter.getpostman.com/view/26061685/2s93m8xKje`
+
+* Click "Run in Postman" button on the top right
+* Select the local postman application
+* Select workplace to import the collection
+* Click "Import"
+* Click on "Collections"
+
+Now, you can show the collection in local Postman application.
+
+
+
+
+
+
+
+
+
+
 
 
 ## Howto
 
-Use the POSTMAN request API application
+### General
 
-Use endpoint to register the API
+* Open Postman request API application
+* Use endpoint to register the API
+* Use endpoint to login the API
+* Use endpoints...
 
-Use enpoint to login the API
-
-Use API endpoints 
+### API Details
 
 | # | API Endpoint | HTTP Method | URI  |
 |--:|---------|:--:|:----|
@@ -90,7 +163,7 @@ Use API endpoints
 ```
 The base URL will be : "http://localhost:8000/admin/issue_tracking_system"
 
-You must be authenticated to use endpoints.
+You must be registered and authenticated to use endpoints.
 ```
 
 3. Retrieve the list of all the projects attached to the user connected 
