@@ -138,14 +138,14 @@ class PermissionProjectsUsers(BasePermission):
     def has_permission(self, request, view):
         user = request.user
 
-        print("> Permission_xxx(has_permission) - Action : ", view.action, " User : ", user )
+        print("> Permission_ProjectsUsers(has_permission) - Action : ", view.action, " User : ", user )
 
         if view.action == "list":
             print("Action : List")
             print("Only project author or contributor are able to list users attached to a project.")
             
             project_id = view.kwargs.get('project_id')
-            project = Project.objects.get(id=project_id)
+            project = get_object_or_404(Project, id=project_id)
 
             if user == project.author:
                 print("User is the project author : Author is authorized (Project_id : ", project_id,")")
@@ -165,7 +165,7 @@ class PermissionProjectsUsers(BasePermission):
             print("Only project author is able to add contributor.")
             
             project_id = view.kwargs.get('project_id')
-            project = Project.objects.get(id=project_id)
+            project = get_object_or_404(Project, id=project_id)
 
             if user == project.author:
                 print("User is the project author : Author is authorized (Project_id : ", project_id,")")
@@ -186,7 +186,7 @@ class PermissionProjectsUsers(BasePermission):
             print("Only project author is able to delete a contributor.")
 
             project_id = view.kwargs.get('project_id')
-            project = Project.objects.get(id=project_id)
+            project = get_object_or_404(Project, id=project_id)
 
             if user == project.author:
                 print("User is the project author : Author is authorized (Project_id : ", project_id,")")
@@ -202,12 +202,12 @@ class PermissionProjectsUsers(BasePermission):
             print("No retrieve function is available.")
             return False
 
-        print("> Permission_xxx(has_permission) is finished. True is returned because need to check others permissions.")
+        print("> Permission_ProjectsUsers(has_permission) is finished. True is returned because need to check others permissions.")
         return True
 
     def has_object_permission(self, request, view, obj):
         user = request.user
-        print("> Permission_xxx(has_object_permission) : View action = ", view.action, "User = ", user, "Object author =", obj.author)
+        print("> Permission_ProjectsUsers(has_object_permission) : View action = ", view.action, "User = ", user, "Object author =", obj.author)
         
 
         if view.action == "list":
@@ -226,7 +226,7 @@ class PermissionProjectsUsers(BasePermission):
             print("Action : Retrieve")                       
 
 
-        print("> Permission_xxx(has_object_permission) is finished. True is returned because need to check others permissions.")
+        print("> Permission_ProjectsUsers(has_object_permission) is finished. True is returned because need to check others permissions.")
         return True
 
 

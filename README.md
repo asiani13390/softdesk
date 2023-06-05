@@ -291,7 +291,7 @@ You must be registered and authenticated to use endpoints.
     * URI : /projects/
     * Headers : Authorization = Bearer [access token]
     * Body : Raw - JSON 
-    
+
     ```
         { 
             "title": "PROJECT_ASI_02",
@@ -323,81 +323,162 @@ You must be registered and authenticated to use endpoints.
 
 5. Retrieve project details from its id
 
+    **Access**
+    Endpoint is limited to : 
+
+    |PERMISSIONS|
+    |-----------|
+    |IsAuthenticated|
+    |PermissionProject|
+	
+    **Run query**
     * Open Postman
     * Use method "GET"
     * URI : /projects/{id}/
     * Headers : Authorization = Bearer [access token]
     * Body : None
     * Click "Send" button
-
-    |PERMISSIONS|
-    |-----------|
-    |Authenticated user|
-    |Project is available only for its author or its contributor|
-    
-    |RESULT|
+    * Postman launch the query 
+    * Postman show result and serializer data 
+    * Result : "Status: 200 OK"
+        ```
+            {
+                "id": 33,
+                "title": "PROJECT_ASI_02",
+                "description": "Project description for ASI Project 02.",
+                "type": "IOS",
+                "author": 1,
+                "contributors": []
+            }
+        ```
+        
+    |RULES|
     |------|
-    |Result : A JSON table of the project|
+    |User must be authenticated|
+    |Projects are visible only by their author or contributor|
+
 
 6. Update a project
 
+    **Access**
+    Endpoint is limited to : 
+
+    |PERMISSIONS|
+    |-----------|
+    |IsAuthenticated|
+    |PermissionProject|
+	
+    **Run query**
     * Open Postman
     * Use method "PUT"
     * URI : /projects/{id}/
     * Headers : Authorization = Bearer [access token]
-    * Body : 
-    * Click "Send" button
+    * Body : Raw - JSON 
+        
+        ```
+            {
+                "title": "PROJECT_ASI_03",
+                "description": "Project description for ASI Project 03",
+                "type": "ANDROID",
+                "author": "1"
+            }
+        ```
 
-    |PERMISSIONS|
-    |-----------|
-    |Authenticated user|
-    |Update a project is only available for its author|
-    
-    |RESULT|
+    * Click "Send" button
+    * Postman launch the query 
+    * Postman show result and serializer data 
+    * Result : "Status: 200 OK"
+        ```
+            {
+                "id": 33,
+                "title": "PROJECT_ASI_03",
+                "description": "Project description for ASI Project 03",
+                "type": "ANDROID",
+                "author": 1,
+                "contributors": []
+            }
+        ```
+        
+    |RULES|
     |------|
-    |Not authenticated : Given token not valid for any token type|
-    |Is author : A JSON table of the project update|
-    |Is contributor but not author : You do not have permission to perform this action.|
+    |User must be authenticated|
+    |Only the author has permission to update a project|
+
 
 7. Delete a project and its problems 
 
+    **Access**
+    Endpoint is limited to : 
+
+    |PERMISSIONS|
+    |-----------|
+    |IsAuthenticated|
+    |PermissionProject|
+	
+    **Run query**
     * Open Postman
     * Use method "DELETE"
     * URI : /projects/{id}/
     * Headers : Authorization = Bearer [access token]
     * Body : None
     * Click "Send" button
+    * Postman launch the query 
+    * Postman show result and serializer data 
+    * Result : "Status: 204 No Content"
+        ```
 
-    |PERMISSIONS|
-    |-----------|
-    |Authenticated user|
-    |Delete a project is only available for its author|
-    
-    |RESULT|
+        ```
+        
+    |RULES|
     |------|
-    |Not authenticated : Given token not valid for any token type|
-    |Is author : Empty result|
-    |Is contributor but not author : You do not have permission to perform this action.|
+    |User must be authenticated|
+    |Only the author has permission to delete a project|
+
 
 8. Add a collaborator to a project
 
+    **Access**
+    Endpoint is limited to : 
+
+    |PERMISSIONS|
+    |-----------|
+    |IsAuthenticated|
+    |PermissionProjectsUsers|
+	
+    **Run query**
     * Open Postman
     * Use method "POST"
     * URI : /projects/{id}/users/
     * Headers : Authorization = Bearer [access token]
     * Body : Raw - JSON
-    * Click "Send" button
 
-    |PERMISSIONS|
-    |-----------|
-    |Authenticated user|
-    |Add a contributor is only available for the project author|
-    
-    |RESULT|
+        ```
+            {
+                "user_id": "1",
+                "permissions": "admin",
+                "role": "Manager"
+            }
+        ``` 
+
+    * Click "Send" button
+    * Postman launch the query 
+    * Postman show result and serializer data 
+    * Result : "Status: 201 Created"
+        ```
+            {
+                "id": 59,
+                "permissions": "admin",
+                "role": "Manager",
+                "user": 1,
+                "project": 32
+            }
+        ```
+        
+    |RULES|
     |------|
-    |Not authenticated : Given token not valid for any token type|
-    |Is author : JSON table of user inserted|
-    |Is not the project author : You do not have permission to perform this action.|
+    |User must be authenticated|
+    |Only project author has permission to add a contributor|
+
 
 9. Retrieve the list of all users attached to a project
 

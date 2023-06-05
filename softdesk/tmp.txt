@@ -1,4 +1,4 @@
-3. Create a project
+8. Add a collaborator to a project
 
     **Access**
     Endpoint is limited to : 
@@ -6,39 +6,40 @@
     |PERMISSIONS|
     |-----------|
     |IsAuthenticated|
-    |PermissionProject|
+    |PermissionProjectsUsers|
 	
     **Run query**
     * Open Postman
     * Use method "POST"
-    * URI : /projects/
+    * URI : /projects/{id}/users/
     * Headers : Authorization = Bearer [access token]
-    * Body : Raw - JSON 
-    ```
-        { 
-            "title": "PROJECT_ASI_02",
-            "description": "Project description for ASI Project 02",
-            "type": "IOS",
-            "author": "1" 
-        }
-    ```
+    * Body : Raw - JSON
+
+        ```
+            {
+                "user_id": "1",
+                "permissions": "admin",
+                "role": "Manager"
+            }
+        ``` 
+
     * Click "Send" button
     * Postman launch the query 
     * Postman show result and serializer data 
-    * Result : "Status: 201 OK"
+    * Result : "Status: 201 Created"
         ```
             {
-                "id": 33,
-                "title": "PROJECT_ASI_02",
-                "description": "Project description for ASI Project 02.",
-                "type": "IOS",
-                "author": 1,
-                "contributors": []
+                "id": 59,
+                "permissions": "admin",
+                "role": "Manager",
+                "user": 1,
+                "project": 32
             }
         ```
         
     |RULES|
     |------|
     |User must be authenticated|
-    |Authenticated user can create a project|
+    |Only the author has permission to update a project|
+
 

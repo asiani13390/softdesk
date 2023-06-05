@@ -23,6 +23,8 @@ from .permissions import PermissionIssue
 from .permissions import PermissionComment
 
 
+
+
 #
 # 1. User registration - POST - /signup/
 #
@@ -183,7 +185,9 @@ class ProjectsUsersViewset(ModelViewSet):
         print("> ProjectsUsersViewset: list()")
 
         project_id = self.kwargs.get('project_id')
+
         contributors = Contributor.objects.filter(project_id=project_id)
+
         serializer = ContributorSerializer(contributors, many=True)
 
         message = { "message" : "ProjectsUsersViewset - List", "data" : serializer.data}
