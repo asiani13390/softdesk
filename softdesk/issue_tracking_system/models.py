@@ -9,10 +9,10 @@ from django.contrib.auth.models import User
 class Project(models.Model):
 
     TYPE = (
-        ('backend', 'Back-end'),
-        ('frontend', 'Front-end'),
-        ('ios', 'IOS'),
-        ('android', 'Android'),
+        ('BACKEND', 'Back-end'),
+        ('FRONTEND', 'Front-end'),
+        ('IOS', 'IOS'),
+        ('ANDROID', 'Android'),
     )
 
     title = models.CharField(max_length=255)

@@ -26,6 +26,7 @@ class PermissionProject(BasePermission):
 
         print("> Permission_Project(has_permission) - Action : ", view.action, " User : ",user )
 
+        # 3. GET - Retrieve the list of all the projects attached to the connected user
         if view.action == "list":
             print("Action : List")
             print("User is authenticated.")
@@ -33,28 +34,33 @@ class PermissionProject(BasePermission):
             print("Always authorized.")
             return True
 
+        # 4. POST - Create a project
         if view.action == "create":
             print("Action : Create")
             print("User is authenticated.")
             print("Authenticated user can create a project.")
             return True
 
-        if view.action == "update":
-            print("Action : Update")
-            print("Update will be process in has_object_permission()")
-            return True
-            
-        if view.action == "destroy":
-            print("Action : Destroy")
-            print("destroy will be process in has_object_permission()")
-            return True
-
+        # 5. GET - Retrieve project details from its id
         if view.action == "retrieve":
             print("Action : Retrieve")
             print("retrieve will be process in has_object_permission()")
             return True
 
-        print("> Permission_Project(has_permission) is finished. True is returned because need to check others permissions.")
+        # 6. PUT - Update a project
+        if view.action == "update":
+            print("Action : Update")
+            print("Update will be process in has_object_permission()")
+            return True
+
+        # 7. DELETE - Delete a project and its problems
+        if view.action == "destroy":
+            print("Action : Destroy")
+            print("destroy will be process in has_object_permission()")
+            return True
+        
+        # End of this permission class 
+        print("> Permission_Project(has_permission) is finished.")
         return True
 
     def has_object_permission(self, request, view, obj):

@@ -1,0 +1,44 @@
+3. Create a project
+
+    **Access**
+    Endpoint is limited to : 
+
+    |PERMISSIONS|
+    |-----------|
+    |IsAuthenticated|
+    |PermissionProject|
+	
+    **Run query**
+    * Open Postman
+    * Use method "POST"
+    * URI : /projects/
+    * Headers : Authorization = Bearer [access token]
+    * Body : Raw - JSON 
+    ```
+        { 
+            "title": "PROJECT_ASI_02",
+            "description": "Project description for ASI Project 02",
+            "type": "IOS",
+            "author": "1" 
+        }
+    ```
+    * Click "Send" button
+    * Postman launch the query 
+    * Postman show result and serializer data 
+    * Result : "Status: 201 OK"
+        ```
+            {
+                "id": 33,
+                "title": "PROJECT_ASI_02",
+                "description": "Project description for ASI Project 02.",
+                "type": "IOS",
+                "author": 1,
+                "contributors": []
+            }
+        ```
+        
+    |RULES|
+    |------|
+    |User must be authenticated|
+    |Authenticated user can create a project|
+

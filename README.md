@@ -154,47 +154,172 @@ The base URL will be : "http://localhost:8000/admin/issue_tracking_system"
 
 You must be registered and authenticated to use endpoints.
 ```
-1. User signup
+1. User signup (Register)
 
-2. user login
+    **Access**
+    Endpoint is limited to : 
 
-3. Retrieve the list of all the projects attached to the user connected 
+    |PERMISSIONS  |
+    |-------------|
+    |AllowAny     |
+
+    **Run query**
+    * Open Postman
+    * Use method "POST"
+    * URI : /signup/
+    * Headers : Nothing
+    * Body : Raw - JSON 
     
+        ```
+        {
+             "first_name": "Laurent",
+             "last_name": "Dupont",
+             "email": "ldupont@softdesk.fr",
+             "username": "ldupont",
+             "password": "xxx"
+        }
+        ```
+   * Click "Send" button
+   * Postman launch the query 
+   * Postman show result and serializer data 
+        * Result : "Status: 201 Created"
+
+            ```
+            {
+                "first_name": "Didier",
+                "last_name": "Dupont",
+                "username": "ddupont",
+                "email": "ddupont@softdesk.fr",
+                "date_joined": "2023-06-05T08:03:14.395287Z"
+            }
+            ```
+
+    |RULES|
+    |-----|
+    |Allow anyone to register|
+
+
+2. User login
+
+    **Access**
+    Endpoint is limited to : 
+
+    |PERMISSIONS  |
+    |-------------|
+    |AllowAny     |
+
+    **Run query**
+    * Open Postman
+    * Use method "POST"
+    * URI : /login/
+    * Headers : Nothing
+    * Body : Raw - JSON 
+    
+        ```
+        {
+        	"username": "ddupont",
+        	"password": "xxxx"
+	    }
+        ```
+   * Click "Send" button
+   * Postman launch the query 
+   * Postman show result and serializer data 
+   * Result : "Status: 200 OK"
+        ```
+        {
+        "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4NjA0MDE4OCwianRpIjoiOTU1NjZjYTQ3NDg4NDZkZjhmZGI4MjE1ZjVjNzViNGEiLCJ1c2VyX2lkIjoxNn0.5lnlmch_FI46LDasZyhTrXwyUO7s48_CPi49VWOqc8Q",
+		
+        "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg4NTQ1Nzg4LCJqdGkiOiIxZjI1ODg0ZGE3YTU0OTdhYTI0NDhhNjNiYzlhODk0MSIsInVzZXJfaWQiOjE2fQ.DhnBFoxt5InRcWMJzKaMz4X-RrSFh8KL-fZGi-lyLno"
+		}
+        ```
+
+    |RULES|
+    |-----|
+    |Allow anyone to login|
+
+
+3. Retrieve the list of all the projects attached to the connected user
+
+    **Access**
+    Endpoint is limited to : 
+
+    |PERMISSIONS|
+    |-----------|
+    |IsAuthenticated|
+    |PermissionProject|
+	
+    **Run query**
     * Open Postman
     * Use method "GET"
-    * URI : /projects/ 
+    * URI : /projects/
     * Headers : Authorization = Bearer [access token]
     * Body : None
     * Click "Send" button
- 
-    |PERMISSIONS|
-    |-----------|
-    |Authenticated user|
-    |Project is available only for its author or its contributor|
-
-    |RESULT|
+    * Postman launch the query 
+    * Postman show result and serializer data 
+    * Result : "Status: 200 OK"
+        ```
+        {
+            "id": 32,
+        	"title": "ASI_PROJECT_01",
+        	"description": "Description du projet ASI_01",
+        	"type": "backend",
+        	"author": 1,
+        	"contributors": []
+    	}
+        ```
+        
+    |RULES|
     |------|
-    |Result : A JSON table of projects where the user connected is a contributor or author.|
-    
+    |User must be authenticated|
+    |A project is only accessible to its manager and contributors|
+
 
 4. Create a project
 
+    **Access**
+    Endpoint is limited to : 
+
+    |PERMISSIONS|
+    |-----------|
+    |IsAuthenticated|
+    |PermissionProject|
+	
+    **Run query**
     * Open Postman
     * Use method "POST"
     * URI : /projects/
     * Headers : Authorization = Bearer [access token]
     * Body : Raw - JSON 
-
-        ```{ "title": "Deep security deployment", "description": "Protect all computers", "type": "Improvement", "author": "1" }```
-    * Click "Send" button
-
-    |PERMISSIONS|
-    |-----------|
-    |Authenticated user|
     
-    |RESULT|
+    ```
+        { 
+            "title": "PROJECT_ASI_02",
+            "description": "Project description for ASI Project 02",
+            "type": "IOS",
+            "author": "1" 
+        }
+    ```
+    * Click "Send" button
+    * Postman launch the query 
+    * Postman show result and serializer data 
+    * Result : "Status: 201 OK"
+        ```
+            {
+                "id": 33,
+                "title": "PROJECT_ASI_02",
+                "description": "Project description for ASI Project 02.",
+                "type": "IOS",
+                "author": 1,
+                "contributors": []
+            }
+        ```
+        
+    |RULES|
     |------|
-    |Result : A JSON table of projects where the user connected is a contributor or author.|
+    |User must be authenticated|
+    |Authenticated user can create a project|
+
 
 5. Retrieve project details from its id
 

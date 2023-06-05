@@ -23,10 +23,6 @@ from .permissions import PermissionIssue
 from .permissions import PermissionComment
 
 
-
-from django.core.exceptions import ObjectDoesNotExist
-
-
 #
 # 1. User registration - POST - /signup/
 #
@@ -41,11 +37,19 @@ class SignupAPIView(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response( {"User (serializer.data)" : serializer.data }, status=status.HTTP_201_CREATED )
+            return Response( serializer.data , status=status.HTTP_201_CREATED )
 
         return Response( { "Errors" : serializer.errors }, status=status.HTTP_400_BAD_REQUEST )
 
 
+#
+# 2. Login - POST - /login/
+#
+# TokenObtainPairView
+
+
+# ModelViewSet
+#
 # Endpoint :
 #           /projects/
 #           /projects/{id}
@@ -63,18 +67,21 @@ class ProjectsViewset(ModelViewSet):
     
     # 3. GET - Retrieve the list of all the projects attached to the connected user
     def get_queryset(self):
-        print("> ProjectsViewset: get()")
+        print("#################################################")
+        print("# Views.py : ProjectsViewset: get()")
+        print("# User must be authentificated.")
+        print("# Permission class limitation : PermissionProject")
 
         user = self.request.user
 
         # If there is a 'pk', you must retrieve all the results so that the permissions can apply and not return "not found"
         pk = self.kwargs.get('pk')
-        print("pk = ", pk)
+        
         if (pk == None ):
-            print("Results are filtered : User must be contributor or project author.")
+            print("# Results are filtered : Display only projects where the user is author or contributor")
             queryset = Project.objects.filter(contributors=user) | Project.objects.filter(author=user)
         else:
-            print("Result are not filtered. Action will be on only one selected object.")
+            print("# Results are not filtered. Allow permission to be apply on one object.")
             queryset = Project.objects.all()
 
         return queryset
@@ -112,8 +119,7 @@ class ProjectsViewset(ModelViewSet):
 
         return Response(serializer.data)
 
-
-
+    # 6. PUT - Update a project
     def update(self, request, *args, **kwargs):
         print("> ProjectsViewset: update()")
 
@@ -124,6 +130,7 @@ class ProjectsViewset(ModelViewSet):
         serializer.save()
         return Response(serializer.data)
     
+    # 7. DELETE - Delete a project and its problems
     def destroy(self, request, *args, **kwargs):
         print("> ProjectsViewset: destroy()")
 
@@ -132,6 +139,8 @@ class ProjectsViewset(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# ModelViewSet
+#
 # Endpoint :
 #           /projects/{id}/users/
 #           /projects/{id}/users/{id}
@@ -139,7 +148,7 @@ class ProjectsViewset(ModelViewSet):
 # 8.  POST - Add a collaborator to a project
 # 9.  GET - Retrieve the list of all users attached to a project
 # 10. DELETE - Remove a user from a project
-
+#
 class ProjectsUsersViewset(ModelViewSet):
 
     serializer_class = ContributorSerializer
@@ -196,6 +205,8 @@ class ProjectsUsersViewset(ModelViewSet):
         return Response("", status=status.HTTP_204_NO_CONTENT)
 
 
+# ModelViewSet
+#
 # Endpoint :
 #           /projects/{id}/issues/
 #           /projects/{id}/issues/{id}
@@ -204,7 +215,7 @@ class ProjectsUsersViewset(ModelViewSet):
 # 12. POST - Creating a problem in a project
 # 13. PUT - Update a problem in a project
 # 14. DELETE - Delete a problem from a project
-
+#
 class IssueViewset(ModelViewSet):
 
     queryset = Issue.objects.all()
@@ -257,6 +268,8 @@ class IssueViewset(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# ModelViewSet
+#
 # Endpoint :
 #           /projects/{id}/issues/{id}/comments/
 #           /projects/{id}/issues/{id}/comments/{id}
@@ -266,8 +279,7 @@ class IssueViewset(ModelViewSet):
 # 17. PUT -  Edit a comment
 # 18. DELETE - Delete a comment
 # 19. GET - Get a comment via its id
-
-
+#
 class CommentViewset(ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
