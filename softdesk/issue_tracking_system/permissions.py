@@ -115,7 +115,7 @@ class PermissionProject(BasePermission):
             return False
 
 
-        print("> Permission_Project(has_object_permission) is finished. True is returned because need to check others permissions.")
+        print("> Permission_Project(has_object_permission) is finished.")
         return True
 
 
@@ -130,10 +130,6 @@ class PermissionProject(BasePermission):
 # 10. DELETE - Remove a user from a project (Author only)
 #
 class PermissionProjectsUsers(BasePermission):
-
-    # RULES
-    # 
-    # 
 
     def has_permission(self, request, view):
         user = request.user
@@ -243,10 +239,6 @@ class PermissionProjectsUsers(BasePermission):
 #
 class PermissionIssue(BasePermission):
 
-    # RULES
-    # 
-    # 
-
     def has_permission(self, request, view):
         user = request.user
 
@@ -313,57 +305,33 @@ class PermissionIssue(BasePermission):
            
         if view.action == "update":
             print("Action : Update")
-            print("User must be a project contributor.")
-            print("Only issue author can update the issue.")
+            print("Only issue's author can update the issue.")
 
-            project_id = view.kwargs.get('project_id')
-            project = get_object_or_404(Project, id=project_id)
-
-            if Contributor.objects.filter(user=user, project=project).exists():
-                print("User is a project contributor. (Project_id : ", project_id,")")
-
-                if user == obj.author:
-                    print("User is the issue author. User is authorized.")
-                    return True
-                else:
-                    print("User is not the issue author. User is unauthorized.")
-                    return False
-
+            if user == obj.author:
+                print("User is the issue author. User is authorized.")
+                return True
             else:
-                print("User is a not a project contributor. (Project_id : ", project_id,")")
-                print("User is not authorized.")
+                print("User is not the issue author. User is unauthorized.")
                 return False
 
-           
+
         if view.action == "destroy":
             print("Action : Destroy")
-            print("User must be a project contributor.")
-            print("Only issue author can delete the issue.")
+            print("Only issue's author can delete the issue.")
 
-            project_id = view.kwargs.get('project_id')
-            project = get_object_or_404(Project, id=project_id)
-
-            if Contributor.objects.filter(user=user, project=project).exists():
-                print("User is a project contributor. (Project_id : ", project_id,")")
-
-                if user == obj.author:
-                    print("User is the issue author. User is authorized.")
-                    return True
-                else:
-                    print("User is not the issue author. User is unauthorized.")
-                    return False
-
+            if user == obj.author:
+                print("User is the issue author. User is authorized.")
+                return True
             else:
-                print("User is a not a project contributor. (Project_id : ", project_id,")")
-                print("User is not authorized.")
-                return False
+               print("User is not the issue author. User is unauthorized.")
+               return False
 
 
         if view.action == "retrieve":
             print("Action : Retrieve")                       
 
 
-        print("> Permission_Issue(has_object_permission) is finished. True is returned because need to check others permissions.")
+        print("> Permission_Issue(has_object_permission) is finished.")
         return True
 
 
@@ -392,13 +360,10 @@ class PermissionComment(BasePermission):
 
         if view.action == "list":
             print("Action : List")
-            print("Only project contributors or the project's author can list comments")
+            print("Only project contributors can list comments")
 
             project_id = view.kwargs.get('project_id')
             project = get_object_or_404(Project, id=project_id)
-
-            if user == project.author:
-                return True
 
             if Contributor.objects.filter(user=user, project=project).exists():
                 print("User is a project contributor. (Project_id : ", project_id,")")
@@ -410,13 +375,13 @@ class PermissionComment(BasePermission):
 
         if view.action == "create":
             print("Action : Create")
-            print("Only project contributors can create comments")
+            print("Only project contributors can create a comment")
 
             project_id = view.kwargs.get('project_id')
             project = get_object_or_404(Project, id=project_id)
 
             if Contributor.objects.filter(user=user, project=project).exists():
-                print("User is a project contributor. (Project_id : ", project_id,")")
+                print("User is a project contributor. User is authorized (Project_id : ", project_id,")")
                 return True
             else:
                 print("User is a not a project contributor. (Project_id : ", project_id,")")
@@ -471,19 +436,13 @@ class PermissionComment(BasePermission):
 
         if view.action == "retrieve":
             print("Action : Retrieve")
-            print("Only project contributors or the project's author can read comments")
+            print("Only project contributors can read comments")
 
             project_id = view.kwargs.get('project_id')
             project = get_object_or_404(Project, id=project_id)
 
-            if user == project.author:
-                print("User is the project's author. User is authorized.")
-                return True
-            else:
-                print("User is not the project's author.")
-
             if Contributor.objects.filter(user=user, project=project).exists():
-                print("User is a project contributor. (Project_id : ", project_id,")")
+                print("User is a project contributor. User is authorized. (Project_id : ", project_id,")")
                 return True
             else:
                 print("User is a not a project contributor. (Project_id : ", project_id,")")
@@ -491,7 +450,6 @@ class PermissionComment(BasePermission):
                 return False
 
 
-
-        print("> Permission_Comment(has_object_permission) is finished. True is returned because need to check others permissions.")
+        print("> Permission_Comment(has_object_permission) is finished.")
         return True
 
