@@ -88,7 +88,7 @@ class ProjectsViewset(ModelViewSet):
 
     # 4. POST - Create a project
     def create(self, request, *args, **kwargs):
-        print("> ProjectsViewset: create()")
+        print("# ProjectsViewset: create()")
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -98,21 +98,20 @@ class ProjectsViewset(ModelViewSet):
 
     # 5. GET - Retrieve project details from its id
     def retrieve(self, request, *args, **kwargs):
-        print("> ProjectsViewset: retrieve()")
+        print("# ProjectsViewset: retrieve()")
 
         project_id = self.kwargs.get('pk')
-        print("> ProjectsViewset: retrieve(", project_id, ")")
+        print("# ProjectsViewset: retrieve(", project_id, ")")
               
         instance = self.get_object()
 
         serializer = self.get_serializer(instance)
-        print(serializer.data)
 
         return Response(serializer.data)
 
     # 6. PUT - Update a project
     def update(self, request, *args, **kwargs):
-        print("> ProjectsViewset: update()")
+        print("# ProjectsViewset: update()")
 
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
@@ -123,7 +122,7 @@ class ProjectsViewset(ModelViewSet):
     
     # 7. DELETE - Delete a project and its problems
     def destroy(self, request, *args, **kwargs):
-        print("> ProjectsViewset: destroy()")
+        print("# ProjectsViewset: destroy()")
 
         instance = self.get_object()
         instance.delete()
@@ -152,7 +151,7 @@ class ProjectsUsersViewset(ModelViewSet):
 
     # 8.  POST - Add a collaborator to a project
     def create(self, request, *args, **kwargs):
-        print("> ProjectsUsersViewset: create()")
+        print("# ProjectsUsersViewset: create()")
 
         project_id = self.kwargs.get('project_id')
 
@@ -171,7 +170,7 @@ class ProjectsUsersViewset(ModelViewSet):
 
     # 9.  GET - Retrieve the list of all users attached to a project 
     def list(self, request, *args, **kwargs):
-        print("> ProjectsUsersViewset: list()")
+        print("# ProjectsUsersViewset: list()")
 
         project_id = self.kwargs.get('project_id')
 
@@ -183,7 +182,7 @@ class ProjectsUsersViewset(ModelViewSet):
 
     # 10. DELETE - Remove a user from a project
     def destroy(self, request, *args, **kwargs):
-        print("> ProjectsUsersViewset : destroy()")
+        print("# ProjectsUsersViewset : destroy()")
 
         user_id = self.kwargs.get('pk')
         project_id = self.kwargs.get('project_id') 
@@ -216,7 +215,7 @@ class IssueViewset(ModelViewSet):
 
     # 11. GET - Retrieve the list of problems related to a project
     def get_queryset(self):
-        print("> IssueViewset: get()")
+        print("# IssueViewset: get()")
 
         project_id = self.kwargs.get('project_id')
         queryset = Issue.objects.filter(project_id=project_id)
@@ -224,7 +223,7 @@ class IssueViewset(ModelViewSet):
 
     # 12. POST - Creating a problem in a project
     def create(self, request, *args, **kwargs):      
-        print("> IssueViewset: create()")
+        print("# IssueViewset: create()")
 
         self.check_permissions(request) 
 
@@ -244,7 +243,7 @@ class IssueViewset(ModelViewSet):
 
     # 13. PUT - Update a problem in a project
     def update(self, request, *args, **kwargs):
-        print("> IssueViewset: update()")
+        print("# IssueViewset: update()")
 
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
@@ -256,7 +255,7 @@ class IssueViewset(ModelViewSet):
 
     # 14. DELETE - Delete a problem from a project
     def destroy(self, request, *args, **kwargs):
-        print("> IssueViewset: destroy()")
+        print("# IssueViewset: destroy()")
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -282,7 +281,7 @@ class CommentViewset(ModelViewSet):
 
     # 15. POST - Create comments on a problem
     def create(self, request, *args, **kwargs):
-        print("> CommentViewset: create()")
+        print("# CommentViewset: create()")
         project_id = self.kwargs['project_id']
         issue_id = self.kwargs['issue_id']
 
@@ -301,14 +300,14 @@ class CommentViewset(ModelViewSet):
 
     # 16. GET - Retrieve the list of all comments related to a problem
     def get_queryset(self):
-        print("> CommentViewset: get()")
+        print("# CommentViewset: get()")
 
         project_id = self.kwargs['project_id']
         issue_id = self.kwargs['issue_id']
         comment_id = self.kwargs.get('pk')
 
         if ( comment_id == None ):
-            print("> Results are filtered by project_id and issue_id.")
+            print("# Results are filtered by project_id and issue_id.")
             queryset = Comment.objects.filter(issue__project_id=project_id, issue_id=issue_id)    
         else:
             print("No filter because 'comment_id' is set.")
@@ -318,7 +317,7 @@ class CommentViewset(ModelViewSet):
 
     # 17. PUT -  Edit a comment
     def update(self, request, *args, **kwargs):
-        print("> CommentViewset: update()")
+        print("# CommentViewset: update()")
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -327,14 +326,14 @@ class CommentViewset(ModelViewSet):
 
     # 18. DELETE - Delete a comment
     def destroy(self, request, *args, **kwargs):
-        print("> CommentViewset: destroy()")
+        print("# CommentViewset: destroy()")
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     # 19. GET - Get a comment via its id
     def retrieve(self, request, *args, **kwargs):
-        print("> CommentViewset: retrieve()")
+        print("# CommentViewset: retrieve()")
            
         instance = self.get_object()
 

@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -8,11 +7,6 @@ from .views import ProjectsViewset
 from .views import ProjectsUsersViewset
 from .views import IssueViewset
 from .views import CommentViewset
-
-
-#from .views import ProjectRetrieveUpdateDestroyView
-#from .views import ProjectListCreateAPIView
-
 
 router = routers.DefaultRouter()
 router.register(r'projects', ProjectsViewset, basename='projects')
@@ -28,6 +22,5 @@ urlpatterns = [
 
     # Import router urls
     path("", include(router.urls)),
-
-
+    
 ]
