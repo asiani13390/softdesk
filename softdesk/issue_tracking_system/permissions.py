@@ -24,98 +24,97 @@ class PermissionProject(BasePermission):
     def has_permission(self, request, view):
         user = request.user
 
-        print("> Permission_Project(has_permission) - Action : ", view.action, " User : ",user )
+        print("# Permission_Project(has_permission) - Action : ", view.action, " User : ",user )
 
         # 3. GET - Retrieve the list of all the projects attached to the connected user
         if view.action == "list":
-            print("Action : List")
-            print("User is authenticated.")
-            print("Return projects where user is contributor or author. It is filtered by queryset")
-            print("Always authorized.")
+            print("# Action : List")
+            print("# User is authenticated.")
+            print("# Return projects where user is a contributor or author. It is filtered by queryset")
+            print("# Always authorized.")
             return True
 
         # 4. POST - Create a project
         if view.action == "create":
-            print("Action : Create")
-            print("User is authenticated.")
-            print("Authenticated user can create a project.")
+            print("# Action : Create")
+            print("# User is authenticated.")
+            print("# Authenticated user can create a project.")
             return True
 
         # 5. GET - Retrieve project details from its id
         if view.action == "retrieve":
-            print("Action : Retrieve")
-            print("retrieve will be process in has_object_permission()")
+            print("# Action : Retrieve")
+            print("# retrieve will be process in has_object_permission()")
             return True
 
         # 6. PUT - Update a project
         if view.action == "update":
-            print("Action : Update")
-            print("Update will be process in has_object_permission()")
+            print("# Action : Update")
+            print("# Update will be process in has_object_permission()")
             return True
 
         # 7. DELETE - Delete a project and its problems
         if view.action == "destroy":
-            print("Action : Destroy")
-            print("destroy will be process in has_object_permission()")
+            print("# Action : Destroy")
+            print("# destroy will be process in has_object_permission()")
             return True
         
         # End of this permission class 
-        print("> Permission_Project(has_permission) is finished.")
+        print("# Permission_Project(has_permission) is finished.")
         return True
 
     def has_object_permission(self, request, view, obj):
         user = request.user
-        print("> Permission_Project(has_object_permission) : View action = ", view.action, "User = ", user, "Object author =", obj.author)
-        
+        print("# Permission_Project(has_object_permission) : View action = ", view.action, "User = ", user, "Object author =", obj.author)
 
         if view.action == "list":
-            print("Action : List")
+            print("# Action : List")
             return True
 
         if view.action == "create":
-            print("Action : Create")
+            print("# Action : Create")
             return True
 
         if view.action == "update":
-            print("Action : Update")
-            print("Only project author is able to update a project.")
+            print("# Action : Update")
+            print("# Only project author is able to update a project.")
 
             if (user == obj.author): 
-                print("User is the author. Author is authorized.")
+                print("# User is the author. Author is authorized.")
                 return True
             else:
-                print("User is not the project author : Not autorized")
+                print("# User is not the project author : Not autorized")
                 return False
 
         if view.action == "destroy":
-            print("Action : Destroy")
-            print("Only project author is able to delete a project.")
+            print("# Action : Destroy")
+            print("# Only project author is able to delete a project.")
 
             if (user == obj.author): 
-                print("User is the author. Author is authorized.")
+                print("# User is the author. Author is authorized.")
                 return True
             else:
-                print("User is not the project author : Not autorized")
+                print("# User is not the project author : Not autorized")
                 return False
 
         if view.action == "retrieve":
-            print("Action : Retrieve")
-            print("Author and Contributor are able to retrieve a project.")
+            print("# Action : Retrieve")
+            print("# Author and contributor are able to retrieve a project.")
 
             if (user == obj.author): 
-                print("User is author. Author is authorized.")
+                print("# User is author. Author is authorized.")
                 return True
 
             if (user in obj.contributors.all()):
-                print("User is a contributor. Contributor is authorized.")
+                print("# User is a contributor. Contributor is authorized.")
                 return True
             
             # Permission denied
-            print("Not Author, Not Contributor : Permission denied.")
+            print("# Not author, not contributor : Permission denied.")
             return False
 
 
-        print("> Permission_Project(has_object_permission) is finished.")
+        print("# Permission_Project(has_object_permission) is finished.")
         return True
 
 
@@ -134,18 +133,17 @@ class PermissionProjectsUsers(BasePermission):
     def has_permission(self, request, view):
         user = request.user
 
-        print("> Permission_ProjectsUsers(has_permission) - Action : ", view.action, " User : ", user )
+        print("# Permission_ProjectsUsers(has_permission) - Action : ", view.action, " User : ", user )
 
         if view.action == "list":
-            print("Action : List")
-            print("Only project author or contributor are able to list users attached to a project.")
+            print("# Action : List")
+            print("# Only project author or contributor are able to list users attached to a project.")
             
             project_id = view.kwargs.get('project_id')
             project = get_object_or_404(Project, id=project_id)
 
             if user == project.author:
-                print("User is the project author : Author is authorized (Project_id : ", project_id,")")
-                "Project_id : ", project_id
+                print("# User is the project author : Author is authorized (Project_id : ", project_id,")")
                 return True
 
             if Contributor.objects.filter(user=user, project=project).exists():
