@@ -1,6 +1,8 @@
 from rest_framework.permissions import BasePermission
 from .models import Project
 from .models import Contributor
+from .models import Issue
+from .models import Comment
 from django.shortcuts import get_object_or_404
 
 # PERMISSION FOR ENDPOINT : Project

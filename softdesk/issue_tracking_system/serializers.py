@@ -21,7 +21,8 @@ class SignupSerializer(ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-
+    author = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
+    
     class Meta:
         model = Project
         fields = '__all__'

@@ -300,8 +300,7 @@ You must be registered and authenticated to use endpoints.
             { 
                 "title": "PROJECT_ASI_02",
                 "description": "Project description for ASI Project 02",
-                "type": "IOS",
-                "author": "1" 
+                "type": "IOS"
             }
         ```
 
