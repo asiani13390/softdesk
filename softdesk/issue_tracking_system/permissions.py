@@ -506,7 +506,8 @@ class PermissionComment(BasePermission):
 
             if user == project.author:
                 print("# User is the project author. User is authorized")
-
+                return True
+                
             if user == obj.author:
                 print("# User is the comment's author. User is authorized")
                 return True
